@@ -1,13 +1,24 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, use_key_in_widget_constructors, avoid_unnecessary_containers
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, use_key_in_widget_constructors, avoid_unnecessary_containers, avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:todo/models/task.dart';
 import 'package:todo/screen/add_task_screen.dart';
 import 'package:todo/widget/tasks_list.dart';
 
-class TasksScreen extends StatelessWidget {
+class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
+
+  @override
+  State<TasksScreen> createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
   // Widget buildBottomSheet(BuildContext context) => Container();
- 
+  List<Task> tasks = [
+    // Task(name: 'buy milk'),
+    // Task(name: 'buy oranges'),
+    // Task(name: 'buy tomato'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +35,15 @@ class TasksScreen extends StatelessWidget {
           showModalBottomSheet(
             context: context,
             // builder: buildBottomSheet,
-            builder: ( context) => AddTaskScreen(),
-
+            builder: (context) => AddTaskScreen((newTaskTitle) {
+              // print(newTaskTitle);
+              setState(() {
+                tasks.add(
+                  Task(name: newTaskTitle),
+                );
+              });
+              Navigator.pop(context);
+            }),
           );
         },
       ),
@@ -63,7 +81,7 @@ class TasksScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '12 Tasks',
+                  '${tasks.length} Tasks',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 18,
@@ -84,7 +102,7 @@ class TasksScreen extends StatelessWidget {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: TasksList(),
+              child: TasksList(tasks: tasks),
             ),
           ),
         ],
